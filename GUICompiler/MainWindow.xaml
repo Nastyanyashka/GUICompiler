@@ -1,0 +1,96 @@
+﻿<Window x:Class="GUICompiler.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GUICompiler"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="550" Width="800"
+        >
+
+    <Window.CommandBindings>
+        <CommandBinding Command="New" CanExecute="NewCommand_CanExecute" Executed="NewCommand_Executed" />
+        <CommandBinding Command="Open" CanExecute="OpenCommand_CanExecute" Executed="OpenCommand_Executed" />
+        <CommandBinding Command="Save" CanExecute="SaveCommand_CanExecute" Executed="SaveCommand_Executed" />
+        <CommandBinding Command="SaveAs" CanExecute="SaveAsCommand_CanExecute" Executed="SaveAsCommand_Executed" />
+        <CommandBinding Command="Close" CanExecute="CloseCommand_CanExecute" Executed="CloseCommand_Executed" />
+        <CommandBinding Command="Delete" CanExecute="DeleteCommand_CanExecute" Executed="DeleteCommand_Executed" />
+    </Window.CommandBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="5"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="_Файл">
+                <MenuItem Command="New" />
+                <MenuItem Command="Open" />
+                <MenuItem Command="Save" />
+                <MenuItem Command="SaveAs" />
+                <Separator />
+                <MenuItem Command="Close"/>
+            </MenuItem>
+           
+            <MenuItem Header="_Правка">
+                <MenuItem Command="Undo" />
+                <MenuItem Command="Redo" />
+                <MenuItem Command="Cut" />
+                <MenuItem Command="Copy" />
+                <MenuItem Command="Paste" />
+                <MenuItem Command="Delete"/>
+                <MenuItem Command="SelectAll" />
+            </MenuItem>
+            <MenuItem Header="_Текст"></MenuItem>
+            <MenuItem Header="_Пуск"> </MenuItem>
+            <MenuItem Header="_Справка">
+                <MenuItem Header="Вызов справки" Click="Help_Click" />
+                <MenuItem Header="О программе" Click="AboutProgramm_Click"/>
+            </MenuItem>
+            
+        </Menu>
+        <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch"></GridSplitter>
+        <Border Grid.Row="4" Width="Auto" Height="Auto" BorderThickness="1"  BorderBrush="Black"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25,10,25,10">
+            <TextBlock Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Border>
+
+        <RichTextBox Grid.Row ="2" x:Name ="textEditor" AcceptsReturn="True" AcceptsTab ="True" Margin="25,10,25,0"
+                 Width="Auto" Height="Auto" BorderBrush="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                >
+
+            <RichTextBox.Resources>
+                <Style TargetType="{x:Type Paragraph}">
+                    <Setter Property="Margin" Value="0" />
+                </Style>
+            </RichTextBox.Resources>
+            <FlowDocument >
+              
+            </FlowDocument>
+        </RichTextBox>
+        <WrapPanel Grid.Row="1">
+            <Button   Height="50" Width="50" Command="New" Margin="5,0,5,0">Создать</Button>
+            <Button   Height="50" Width="50" Command="Open" Margin="0,0,5,0">Открыть</Button>
+            <Button   Height="50" Width="50" Command="Save" Margin="0,0,5,0">Save</Button>
+
+            <Button   Height="50" Width="50" Command="Undo" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">Undo</Button>
+            <Button   Height="50" Width="50" Command="Redo" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">Redo</Button>
+            <Button   Height="50" Width="50" Command="Copy" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">Copy</Button>
+            <Button   Height="50" Width="50" Command="Cut" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">Cut</Button>
+            <Button   Height="50" Width="50" Command="Paste" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">Paste</Button>
+            <Button   Height="50" Width="50" Margin="0,0,5,0">Пуск</Button>
+            <Button   Height="50" Width="50" Margin="0,0,5,0" Click="Help_Click">Вызов справки</Button>
+            <Button   Height="50" Width="50" Margin="0,0,5,0" Click="AboutProgramm_Click">О программе</Button>
+        </WrapPanel>
+        
+
+
+
+    </Grid>
+
+</Window>
