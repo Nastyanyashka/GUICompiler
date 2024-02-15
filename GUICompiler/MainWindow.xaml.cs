@@ -58,7 +58,10 @@ namespace GUICompiler
         }
         private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
-            if(AskSave() == false) { e.Cancel = true; }
+            if (textChanged == true)
+            {
+                if (AskSave() == false) { e.Cancel = true; }
+            }
         }
 
         internal string CurrentFile { get { return currentFile; } set { currentFile = value; } }
@@ -132,7 +135,7 @@ namespace GUICompiler
 
         private void NewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (currentFile != string.Empty)
+            if (currentFile != string.Empty && textChanged == true)
             {
                 if (AskSave() == false) { return; }
             }
@@ -151,7 +154,7 @@ namespace GUICompiler
 
         private void OpenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if(currentFile != string.Empty)
+            if(currentFile != string.Empty && textChanged == true)
             {
                 if(AskSave() == false) { return; }
             }
@@ -227,6 +230,10 @@ namespace GUICompiler
                 "\r\nВерсия: 0.1-Alpha\r\nЛицензия: MIT LICENSE\r\nЛокаль: RU-ru\r\nПользовательский интерфейс: C#&WF\r\nДата: 15.02.24",
                 "О программе");
         }
-       
+
+        private void textEditor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!textChanged) textChanged = true;
+        }
     }
 }

@@ -62,16 +62,13 @@
                  Width="Auto" Height="Auto" BorderBrush="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
                  ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                >
+               TextChanged="textEditor_TextChanged" >
 
             <RichTextBox.Resources>
                 <Style TargetType="{x:Type Paragraph}">
                     <Setter Property="Margin" Value="0" />
                 </Style>
             </RichTextBox.Resources>
-            <FlowDocument >
-              
-            </FlowDocument>
         </RichTextBox>
         <WrapPanel Grid.Row="1">
             <Button   Height="50" Width="50" Command="New" Margin="5,0,5,0">Создать</Button>
