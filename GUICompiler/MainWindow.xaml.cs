@@ -1,7 +1,9 @@
 ﻿using Microsoft.Win32;
 using System.IO;
+using System.IO.Pipes;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -24,6 +26,7 @@ namespace GUICompiler
         bool textChanged = false;
         public MainWindow()
         {
+
             InitializeComponent();
             this.Closing += MainWindow_Closing;
         }
@@ -140,6 +143,10 @@ namespace GUICompiler
                 if (AskSave() == false) { return; }
             }
             CreateFile();
+            if (currentFile == string.Empty)
+            {
+                return;
+            }
             TextRange range = new TextRange(textEditor.Document.ContentStart, textEditor.Document.ContentEnd);
             using (FileStream fs = new FileStream(currentFile, FileMode.Open))
             {
@@ -154,9 +161,9 @@ namespace GUICompiler
 
         private void OpenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if(currentFile != string.Empty && textChanged == true)
+            if (currentFile != string.Empty && textChanged == true)
             {
-                if(AskSave() == false) { return; }
+                if (AskSave() == false) { return; }
             }
             OpenFile();
         }
@@ -221,7 +228,7 @@ namespace GUICompiler
                 "Вырезать текстовый фрагмент\r\nВыделите нужный вам текстовый фрагмент и на вкладке Правка или панели элементов выберите пункт Вырезать, выделенный текст будет стерт их документа с одновременным копированием\r\n\r\n" +
                 "Вставить текстовый фрагмент \r\nПереместите курсор на место вставки текста, на вкладке Правка или панели элементов выберите пункт Вставить, текст из буфера обмена будет вставлен после курсора\r\n\r\nВызов справки - руководства пользователя\r\nДля вызова справки-руководства пользователя на вкладке Справка или на панели элементов выберите пункт Вызов справки\r\n\r\n" +
                 "Вызов информации о программе\r\nДля вызова информации о программе на вкладке Справка или на панели элементов выберите пункт О программе\r\n\r\nВыход из программы\r\nДля выхода из программы на вкладке Файл или на панели элементов выберите пункт Выход\r\n\r\nФункция Удалить\r\nВыделите нужный вам текстовый фрагмент и на вкладке Правка выберите пункт Удалить, выделенный текст будет стерт их документа без копирования\r\n\r\n" +
-                "Функция Выделить все\r\nНа вкладке Правка выберите пункт Выделить все, на весь текст документа будет применено выделение\r\n","Справка");
+                "Функция Выделить все\r\nНа вкладке Правка выберите пункт Выделить все, на весь текст документа будет применено выделение\r\n", "Справка");
         }
 
         private void AboutProgramm_Click(object sender, RoutedEventArgs e)
@@ -234,6 +241,89 @@ namespace GUICompiler
         private void textEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!textChanged) textChanged = true;
+            var textbox = (sender as RichTextBox);
+            TextRange range = new TextRange(textbox.Document.ContentStart, textbox.Document.ContentEnd);
+            outputText.Text = lexText(range.Text);
+
+        }
+
+        string lexText(string text)
+        {
+            string temp = string.Empty;
+            int current_line = 0;
+            int start_pos = 0;
+            int end_pos = 0;
+            string finalText = string.Empty;
+            Token currentToken = lexer(text[0].ToString());
+            Token tempToken;
+            for (int i = 0; i < text.Length; i++)
+            {
+                tempToken = lexer(text[i].ToString());
+                if (currentToken.Type == TokenType.TOKEN_IDENTIFIER && tempToken.Type == TokenType.TOKEN_ERROR)
+                {
+                    tempToken = currentToken;
+                }
+                if(tempToken.Type != currentToken.Type)
+                {
+                    currentToken = lexer(temp);
+                    end_pos--;
+                    finalText += "Current Token: " + currentToken.Type + " - " + currentToken.Name + " - " + temp + " - " + " position" +
+                        " [" + start_pos + "," + end_pos + "]" + " line: " + current_line + "\n";
+                    if (temp == "\n")
+                    {
+                        current_line++;
+                        start_pos = 0;
+                        end_pos = 0;
+                        temp = string.Empty;
+                        currentToken = tempToken;
+                    }
+                    else
+                    {
+                        end_pos++;
+                        start_pos = end_pos;
+                        temp = string.Empty;
+                        currentToken = tempToken;
+                    }
+                }
+                
+                temp += text[i];
+                end_pos++;
+            }
+            currentToken = lexer(temp);
+            end_pos--;
+            finalText += "Current Token: " + currentToken.Type + " - " + currentToken.Name + " - " + temp + " - " + " position" +
+                " [" + start_pos + "," + end_pos + "]" + " line: " + current_line + "\n";
+            return finalText;
+        }
+        Token lexer(string strToLex)
+        {
+
+            switch (strToLex)
+            {
+                case "int": return new Token("ключевое слово", TokenType.TOKEN_INT);
+                case "string": return new Token("ключевое слово", TokenType.TOKEN_STRING);
+                case "Dictionary": return new Token("ключевое слово", TokenType.TOKEN_DICTIONARY);
+                case "new": return new Token("ключевое слово", TokenType.TOKEN_NEW);
+                case "=": return new Token("оператор присваивания", TokenType.TOKEN_EQUALS);
+                case ";": return new Token("конец оператора", TokenType.TOKEN_SEMICOLON);
+                case "<": return new Token("открывающая треугольная скобка", TokenType.TOKEN_LEFT_ANGLE_BRACKET);
+                case ">": return new Token("закрывающая треугольная скобка", TokenType.TOKEN_RIGHT_ANGLE_BRACKET);
+                case "(": return new Token("открывающая скобка", TokenType.TOKEN_LEFT_PARANTHESES);
+                case ")": return new Token("закрывающая скобка", TokenType.TOKEN_RIGHT_PARANTHESES);
+                case ",": return new Token("запятая", TokenType.TOKEN_COMMA);
+                case " ": return new Token("разделитель", TokenType.TOKEN_WHITESPACE);
+                case "\r": return new Token("разделитель", TokenType.TOKEN_WHITESPACE_R);
+                case "\n": return new Token("разделитель", TokenType.TOKEN_WHITESPACE_N);
+                default: break;
+            }
+            Regex regex = new Regex("[A-Za-z_]([A-Za-z_]|[0-9])*");
+            Match match = regex.Match(strToLex);
+            string ident = match.Value;
+            if (ident != string.Empty)
+            {
+                return new Token("идентификатор", TokenType.TOKEN_IDENTIFIER);
+            }
+            return new Token("недопустимый символ", TokenType.TOKEN_ERROR);
         }
     }
 }
