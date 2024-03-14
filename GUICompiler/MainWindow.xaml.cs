@@ -244,7 +244,7 @@ namespace GUICompiler
             var textbox = (sender as RichTextBox);
             TextRange range = new TextRange(textbox.Document.ContentStart, textbox.Document.ContentEnd);
             outputText.Text = lexText(range.Text);
-
+           
         }
 
         string lexText(string text)
@@ -254,8 +254,10 @@ namespace GUICompiler
             int start_pos = 0;
             int end_pos = 0;
             string finalText = string.Empty;
+            Parser parser = new Parser();
             Token currentToken = lexer(text[0].ToString());
             Token tempToken;
+            int countOfErrors = 0;
             for (int i = 0; i < text.Length; i++)
             {
                 tempToken = lexer(text[i].ToString());
@@ -266,9 +268,16 @@ namespace GUICompiler
                 if(tempToken.Type != currentToken.Type)
                 {
                     currentToken = lexer(temp);
+                  
                     end_pos--;
-                    finalText += "Current Token: " + currentToken.Type + " - " + currentToken.Name + " - " + temp + " - " + " position" +
-                        " [" + start_pos + "," + end_pos + "]" + " line: " + current_line + "\n";
+                    if (parser.Parse(currentToken) == States.ERROR)
+                    {
+                        finalText += "Ошибка: " + currentToken.Type + " - " + temp + " - " + " position" +
+                          " [" + start_pos + "," + end_pos + "]" + " line: " + current_line + "\n";
+                        countOfErrors++;
+                    }
+                    //finalText += "Current Token: " + currentToken.Type + " - " + currentToken.Name + " - " + temp + " - " + " position" +
+                    //    " [" + start_pos + "," + end_pos + "]" + " line: " + current_line + "\n";
                     if (temp == "\n")
                     {
                         current_line++;
@@ -291,8 +300,12 @@ namespace GUICompiler
             }
             currentToken = lexer(temp);
             end_pos--;
-            finalText += "Current Token: " + currentToken.Type + " - " + currentToken.Name + " - " + temp + " - " + " position" +
-                " [" + start_pos + "," + end_pos + "]" + " line: " + current_line + "\n";
+            //finalText += "Current Token: " + currentToken.Type + " - " + currentToken.Name + " - " + temp + " - " + " position" +
+            //    " [" + start_pos + "," + end_pos + "]" + " line: " + current_line + "\n";
+            if (countOfErrors == 0)
+            {
+                finalText += "Ошибок нет";
+            }
             return finalText;
         }
         Token lexer(string strToLex)

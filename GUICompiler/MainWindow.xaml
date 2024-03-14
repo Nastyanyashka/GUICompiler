@@ -75,18 +75,62 @@
             </RichTextBox.Resources>
         </RichTextBox>
         <WrapPanel Grid.Row="1">
-            <Button   Height="50" Width="50" Command="New" Margin="5,0,5,0">Создать</Button>
-            <Button   Height="50" Width="50" Command="Open" Margin="0,0,5,0">Открыть</Button>
-            <Button   Height="50" Width="50" Command="Save" Margin="0,0,5,0">Save</Button>
+            <Button   Height="50" Width="50" Command="New" Margin="5,0,5,0">
+                <StackPanel>
+                    <Image Source="Resources/add.png"></Image>
+                </StackPanel>
+            </Button>
+            <Button   Height="50" Width="50" Command="Open" Margin="0,0,5,0">
+                <StackPanel>
+                    <Image Source="Resources/OPEN.png"></Image>
+                </StackPanel>
+            </Button>
+            <Button   Height="50" Width="50" Command="Save" Margin="0,0,5,0">
+                <StackPanel>
+                    <Image Source="Resources/SAVE.png"></Image>
+                </StackPanel>
+            </Button>
 
-            <Button   Height="50" Width="50" Command="Undo" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">Undo</Button>
-            <Button   Height="50" Width="50" Command="Redo" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">Redo</Button>
-            <Button   Height="50" Width="50" Command="Copy" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">Copy</Button>
-            <Button   Height="50" Width="50" Command="Cut" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">Cut</Button>
-            <Button   Height="50" Width="50" Command="Paste" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">Paste</Button>
-            <Button   Height="50" Width="50" Margin="0,0,5,0">Пуск</Button>
-            <Button   Height="50" Width="50" Margin="0,0,5,0" Click="Help_Click">Вызов справки</Button>
-            <Button   Height="50" Width="50" Margin="0,0,5,0" Click="AboutProgramm_Click">О программе</Button>
+            <Button   Height="50" Width="50" Command="Undo" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">
+                <StackPanel>
+                    <Image Source="Resources/undo.png"></Image>
+                </StackPanel>
+            </Button>
+            <Button   Height="50" Width="50" Command="Redo" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">
+                <StackPanel>
+                    <Image Source="Resources/redo.png"></Image>
+                </StackPanel>
+            </Button>
+            <Button   Height="50" Width="50" Command="Copy" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">
+                <StackPanel>
+                    <Image Source="Resources/copy.png"></Image>
+                </StackPanel>
+            </Button>
+            <Button   Height="50" Width="50" Command="Cut" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">
+                <StackPanel>
+                    <Image Source="Resources/cut.png"></Image>
+                </StackPanel>
+            </Button>
+            <Button   Height="50" Width="50" Command="Paste" Margin="0,0,5,0" CommandTarget="{Binding ElementName=textEditor}">
+                <StackPanel>
+                    <Image Source="Resources/paste.png"></Image>
+                </StackPanel>
+            </Button>
+            <Button   Height="50" Width="50" Margin="0,0,5,0">
+                <StackPanel>
+                    <Image Source="Resources/run.png"></Image>
+                </StackPanel>
+            </Button>
+            <Button   Height="50" Width="50" Margin="0,0,5,0" Click="Help_Click">
+                <StackPanel>
+                    <Image Source="Resources/help.png"></Image>
+                </StackPanel>
+            </Button>
+            <Button   Height="50" Width="50" Margin="0,0,5,0" Click="AboutProgramm_Click">
+                <StackPanel>
+                    <Image Source="Resources/info.png"></Image>
+                </StackPanel>
+            </Button>
         </WrapPanel>
         
 
