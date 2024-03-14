@@ -8,19 +8,19 @@ Dictionary<int, string> _Dict = new Dictionary<int, string>();
 ```
 ## Разработанная грамматика
 ```
-1.	<DEF> -> ‘Dictionary’ < DICTIONARY >
-2.	< DICTIONARY > -> ‘<’ <TYPEKEY>
-3.	<TYPEKEY> -> (int|string) <COMMA>
-4.	<COMMA> -> ‘,’ <TYPEVALUE>
-5.	<TYPEVALUE> -> (int|string) <CLOSE>
-6.	<CLOSE> -> ‘>‘ <ID>
-7.	<ID> -> (letter|’_’) <IDREM>
-8.	<IDREM> -> (letter|’_’|digit) <IDREM>
-9.	<IDREM> -> = <ASSIGNTMENT>
-10.< ASSIGNTMENT> -> new <NEW>
-11.<NEW> -> Dictionary <DICTIONARY2>
-12.<DICTIONARY2> -> ‘<’ <TYPEKEY2>
-13.<TYPEKEY2> -> (int|string) <COMMA2>
+1. <DEF> -> ‘Dictionary’ <DICTIONARY>
+2. <DICTIONARY> -> ‘<’ <TYPEKEY>
+3. <TYPEKEY> -> (int|string) <COMMA>
+4. <COMMA> -> ‘,’ <TYPEVALUE>
+5. <TYPEVALUE> -> (int|string) <CLOSE>
+6. <CLOSE> -> ‘>‘ <ID>
+7. <ID> -> (letter|’_’) <IDREM>
+8. <IDREM> -> (letter|’_’|digit) <IDREM>
+9. <IDREM> -> = <ASSIGNTMENT>
+10. <ASSIGNTMENT> -> new <NEW>
+11. <NEW> -> Dictionary <DICTIONARY2>
+12. <DICTIONARY2> -> ‘<’ <TYPEKEY2>
+13. <TYPEKEY2> -> (int|string) <COMMA2>
 14. <COMMA> -> ‘,’ <TYPEVALUE2>
 15. <TYPEVALUE2> -> (int|string) <CLOSE2>
 16. <CLOSE2> -> ‘>’ <RBRACKET>
