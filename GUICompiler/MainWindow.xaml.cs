@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System.IO;
 using System.IO.Pipes;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -14,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GUICompiler
 {
@@ -244,20 +246,74 @@ namespace GUICompiler
             var textbox = (sender as RichTextBox);
             TextRange range = new TextRange(textbox.Document.ContentStart, textbox.Document.ContentEnd);
             outputText.Text = lexText(range.Text);
-           
+
         }
 
+
+
+
         string lexText(string text)
+        {
+
+            string finalText = string.Empty;
+
+            States tempState = States.None;
+            Parser parser = new Parser();
+            List<Error> errors = FindErrors(text, ref finalText, ref parser);
+
+
+
+            if (errors.Count == 0)
+            {
+                finalText += "Ошибок нет";
+            }
+            else
+            {
+                bool flag = false;
+                bool flag2 = false;
+                int number = 0;
+                tempState = errors[0].PreviousState;
+                while (flag != true)
+                {
+                    errors[0].PreviousState = tempState;
+                    for (int i = number; i < errors.Count; i++)
+                    {
+                        if (parser.MatchToken(errors[i].Token, tempState) != States.ERROR)
+                        {
+                            number = i;
+                            flag2 = true;
+                             break;
+                        }
+                    }
+                    if (tempState >= States.ERROR)
+                    {
+                        flag = true;
+                    }
+                    else if (flag2 == false)
+                    {
+                        finalText += "Ошибка: " +
+                               " line: " + errors[0].Current_line + " Ожидаемый символ: \"" + tempState + " \"" + "\n";
+                    }
+                    
+                    tempState++;
+                    flag2 = false;
+                }
+            }
+            return finalText;
+        }
+
+        List<Error> FindErrors(string text, ref string finalText, ref Parser parser)
         {
             string temp = string.Empty;
             int current_line = 0;
             int start_pos = 0;
             int end_pos = 0;
-            string finalText = string.Empty;
-            Parser parser = new Parser();
+
             Token currentToken = lexer(text[0].ToString());
             Token tempToken;
-            int countOfErrors = 0;
+
+            List<Error> errors = new List<Error>();
+            States tempState = States.None;
             for (int i = 0; i < text.Length; i++)
             {
                 tempToken = lexer(text[i].ToString());
@@ -265,19 +321,30 @@ namespace GUICompiler
                 {
                     tempToken = currentToken;
                 }
-                if(tempToken.Type != currentToken.Type)
+                if (tempToken.Type != currentToken.Type || tempToken.Type == TokenType.TOKEN_WHITESPACE)
                 {
                     currentToken = lexer(temp);
-                  
                     end_pos--;
-                    if (parser.Parse(currentToken) == States.ERROR)
+
+                    tempState = parser.Parse(currentToken.Type);
+                    if (tempState == States.ERROR)
                     {
-                        finalText += "Ошибка: " + currentToken.Type + " - " + temp + " - " + " position" +
-                          " [" + start_pos + "," + end_pos + "]" + " line: " + current_line + "\n";
-                        countOfErrors++;
+                        tempState = parser.ParseError(currentToken.Type);
+                        if (tempState == States.ERROR)
+                        {
+                            errors.Add(new Error(start_pos, end_pos, temp, currentToken.Type, current_line, parser.PreviousState));
+                        }
+                        else if (tempState != States.Whitespace)
+                        {
+                            for (int j = 0; j < errors.Count; j++)
+                            {
+                                finalText += "Ошибка: " + errors[j].Token + " - " + errors[j].Text + " - " + " position" +
+                             " [" + errors[j].Start_pos + "," + errors[j].End_pos + "]" + " line: " + errors[j].Current_line + "\n";
+                            }
+                            errors.Clear();
+                        }
                     }
-                    //finalText += "Current Token: " + currentToken.Type + " - " + currentToken.Name + " - " + temp + " - " + " position" +
-                    //    " [" + start_pos + "," + end_pos + "]" + " line: " + current_line + "\n";
+
                     if (temp == "\n")
                     {
                         current_line++;
@@ -294,19 +361,32 @@ namespace GUICompiler
                         currentToken = tempToken;
                     }
                 }
-                
+                //current_error = false;
                 temp += text[i];
                 end_pos++;
             }
+
             currentToken = lexer(temp);
             end_pos--;
-            //finalText += "Current Token: " + currentToken.Type + " - " + currentToken.Name + " - " + temp + " - " + " position" +
-            //    " [" + start_pos + "," + end_pos + "]" + " line: " + current_line + "\n";
-            if (countOfErrors == 0)
+            tempState = parser.Parse(currentToken.Type);
+            if (tempState == States.ERROR)
             {
-                finalText += "Ошибок нет";
+                tempState = parser.ParseError(currentToken.Type);
+                if (tempState == States.ERROR)
+                {
+                    errors.Add(new Error(start_pos, end_pos, temp, currentToken.Type, current_line, parser.PreviousState));
+                }
             }
-            return finalText;
+            else if (tempState != States.Whitespace)
+            {
+                for (int j = 0; j < errors.Count; j++)
+                {
+                    finalText += "Ошибка: " + errors[j].Token + " - " + errors[j].Text + " - " + " position" +
+                 " [" + errors[j].Start_pos + "," + errors[j].End_pos + "]" + " line: " + errors[j].Current_line + "\n";
+                }
+                errors.Clear();
+            }
+            return errors;
         }
         Token lexer(string strToLex)
         {
