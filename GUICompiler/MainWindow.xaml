@@ -60,7 +60,13 @@
             <TextBlock x:Name="outputText" Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </ScrollViewer>
         </Border>
-       
+
+        <Border Grid.Row="2" Panel.ZIndex="1" Width="Auto" Height="Auto" BorderThickness="1"  BorderBrush="Black"
+        HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="25,0,25,0">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <TextBlock x:Name="fixedTextBlock" Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </ScrollViewer>
+        </Border>
 
         <RichTextBox Grid.Row ="2" x:Name ="textEditor" AcceptsReturn="True" AcceptsTab ="True" Margin="25,10,25,0"
                  Width="Auto" Height="Auto" BorderBrush="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
