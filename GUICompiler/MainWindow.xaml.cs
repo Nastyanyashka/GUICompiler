@@ -256,11 +256,11 @@ namespace GUICompiler
         string lexText(string text, ref string fixedText)
         {
 
-            string finalText = string.Empty;
-
+            StringBuilder finalTextString = new StringBuilder();
+            StringBuilder finalFixedTextString = new StringBuilder(fixedText);
             States tempState = States.None;
             Parser parser = new Parser();
-            List<Error> errors = FindErrors(text, ref finalText, ref parser,ref fixedText);
+            List<Error> errors = FindErrors(text, finalTextString, ref parser,finalFixedTextString);
 
 
 
@@ -286,7 +286,8 @@ namespace GUICompiler
                     {
                         number = i+1;
                         flag2 = true;
-                        fixedText += errors[i].Text;
+                        finalFixedTextString.Append(" ");
+                        finalFixedTextString.Append(errors[i].Text);
                         break;
                     }
                 }
@@ -298,8 +299,8 @@ namespace GUICompiler
                 {
                     if (errors.Count > 0)
                     {
-                        finalText += "Ошибка: " +
-                               " line: " + errors[0].Current_line + " Ожидаемый символ: \"" + tempState + " \"" + "\n";
+                        finalTextString.Append( "Ошибка: " +
+                               " line: " + errors[0].Current_line + " Ожидаемый символ: \"" + tempState + " \"" + "\n");
                         count++;
                     }
                     if(tempState == States.None && errors.Count <=0)
@@ -308,8 +309,8 @@ namespace GUICompiler
                     }
                     else if(errors.Count <=0)
                     {
-                        finalText += "Ошибка: " +
-                            " line: " + " Ожидаемый символ: \"" + tempState + " \"" + "\n";
+                        finalTextString.Append("Ошибка: " +
+                            " line: " + " Ожидаемый символ: \"" + tempState + " \"" + "\n");
                         count++;
                     }
                     
@@ -320,13 +321,14 @@ namespace GUICompiler
             }
             if (count == 0)
             {
-                finalText += "Ошибок нет";
+                return "Ошибок нет";
             }
-            return finalText;
+            fixedText = finalFixedTextString.ToString();
+            return finalTextString.ToString();
         }
         
 
-        List<Error> FindErrors(string text, ref string finalText, ref Parser parser, ref string fixedText)
+        List<Error> FindErrors(string text, StringBuilder finalText, ref Parser parser, StringBuilder fixedText)
         {
             string temp = string.Empty;
             int current_line = 0;
@@ -362,20 +364,20 @@ namespace GUICompiler
                         {
                             for (int j = 0; j < errors.Count; j++)
                             {
-                                finalText += "Ошибка: " + errors[j].Token + " - " + errors[j].Text + " - " + " position" +
-                             " [" + errors[j].Start_pos + "," + errors[j].End_pos + "]" + " line: " + errors[j].Current_line + "\n";
+                                finalText.Append("Ошибка: " + errors[j].Token + " - " + errors[j].Text + " - " + " position" +
+                             " [" + errors[j].Start_pos + "," + errors[j].End_pos + "]" + " line: " + errors[j].Current_line + "\n");
                             }
-                            fixedText += temp;
+                            fixedText.Append(temp);
                             errors.Clear();
                         }
                     }
                     else if(tempState == States.None)
                     {
-                        fixedText = string.Empty;
+                        fixedText.Remove(0,fixedText.Length);
                     }
-                    else if(temp !="\n" && temp!="\r")
+                    else if(temp !="\n" && temp!="\r" && errors.Count <1)
                     {
-                        fixedText += temp;
+                        fixedText.Append(temp);
                     }
 
                     if (temp == "\n")
@@ -413,20 +415,20 @@ namespace GUICompiler
                 {
                     for (int j = 0; j < errors.Count; j++)
                     {
-                        finalText += "Ошибка: " + errors[j].Token + " - " + errors[j].Text + " - " + " position" +
-                     " [" + errors[j].Start_pos + "," + errors[j].End_pos + "]" + " line: " + errors[j].Current_line + "\n";
+                        finalText.Append( "Ошибка: " + errors[j].Token + " - " + errors[j].Text + " - " + " position" +
+                     " [" + errors[j].Start_pos + "," + errors[j].End_pos + "]" + " line: " + errors[j].Current_line + "\n");
                     }
-                    fixedText += temp;
+                    fixedText.Append(temp);
                     errors.Clear();
                 }
             }
             else if (tempState == States.None)
             {
-                fixedText = string.Empty;
+                fixedText.Remove(0, fixedText.Length);
             }
-            else if (temp != "\n" && temp != "\r")
+            else if (temp != "\n" && temp != "\r" && errors.Count < 1)
             {
-                fixedText += temp;
+                fixedText.Append(temp);
             }
 
             return errors;
