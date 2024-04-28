@@ -242,12 +242,50 @@ namespace GUICompiler
 
         private void textEditor_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!textChanged) textChanged = true;
+            //if (!textChanged) textChanged = true;
+            //var textbox = (sender as RichTextBox);
+            //TextRange range = new TextRange(textbox.Document.ContentStart, textbox.Document.ContentEnd);
+            //string fixedText = string.Empty;
+            //outputText.Text = lexText(range.Text, ref fixedText);
+            ////fixedTextBlock.Text = fixedText;
+            ///
+
+
             var textbox = (sender as RichTextBox);
             TextRange range = new TextRange(textbox.Document.ContentStart, textbox.Document.ContentEnd);
-            string fixedText = string.Empty;
-            outputText.Text = lexText(range.Text, ref fixedText);
-            fixedTextBlock.Text = fixedText;
+ 
+            Regex regex = new Regex(@"\""[^""]*\""");
+            Regex regex2 = new Regex(@"(199[89])|(200[0-4])");
+            Regex regex3 = new Regex(@"(?=.*[0-9])(?=.*[#?!|\@\$%\^&*\-_])(?=.*[а-я])(?=.*[А-Я])[0-9а-яА-Я#?!|\@\$%\^&*\-_]{8,}");
+
+
+            outputText.Text = string.Empty;
+            MatchCollection matches = regex.Matches(range.Text);
+            if (matches.Count > 0)
+            {
+                foreach (Match match in matches)
+                {
+                    outputText.Text += "Подстрока: " + match.Value + " ";
+                    outputText.Text += "Начальная позиция: "+ match.Index + "\r\n";
+                }
+            }
+            matches = regex2.Matches(range.Text);
+            {
+                foreach (Match match in matches)
+                {
+                    outputText.Text += "Подстрока: " + match.Value + " ";
+                    outputText.Text += "Начальная позиция: " + match.Index + "\r\n";
+                }
+            }
+
+            matches = regex3.Matches(range.Text);
+            {
+                foreach (Match match in matches)
+                {
+                    outputText.Text += "Подстрока: " + match.Value + " ";
+                    outputText.Text += "Начальная позиция: " + match.Index + "\r\n";
+                }
+            }
         }
 
 

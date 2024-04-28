@@ -1,4 +1,5 @@
-﻿<Window x:Class="GUICompiler.MainWindow"
+﻿
+    <Window x:Class="GUICompiler.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -34,7 +35,7 @@
                 <Separator />
                 <MenuItem Command="Close"/>
             </MenuItem>
-           
+
             <MenuItem Header="_Правка">
                 <MenuItem Command="Undo" />
                 <MenuItem Command="Redo" />
@@ -45,19 +46,19 @@
                 <MenuItem Command="SelectAll" />
             </MenuItem>
             <MenuItem Header="_Текст"></MenuItem>
-            <MenuItem Header="_Пуск"> </MenuItem>
+            <MenuItem Header="_Пуск"></MenuItem>
             <MenuItem Header="_Справка">
                 <MenuItem Header="Вызов справки" Click="Help_Click" />
                 <MenuItem Header="О программе" Click="AboutProgramm_Click"/>
             </MenuItem>
-            
+
         </Menu>
         <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch"></GridSplitter>
-        
+
         <Border Grid.Row="4" Width="Auto" Height="Auto" BorderThickness="1"  BorderBrush="Black"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="25,10,25,10">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <TextBlock x:Name="outputText" Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <TextBlock x:Name="outputText" Width="Auto" Height="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </ScrollViewer>
         </Border>
 
@@ -138,7 +139,7 @@
                 </StackPanel>
             </Button>
         </WrapPanel>
-        
+
 
 
 
