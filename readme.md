@@ -10,6 +10,6 @@ G[Program]:
 Грамматика является Контекстно свободной
 
 ## Тестовые примеры
-![alt text](ex1.png)
-![alt text](ex2.png)
-![alt text](ex3.png)
+![alt text](ex1.jpg)
+![alt text](ex2.jpg)
+![alt text](ex3.jpg)
