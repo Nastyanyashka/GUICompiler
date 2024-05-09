@@ -1,38 +1,15 @@
-# Объявление ассоциативного массива языка C# 18 вариант
+# Реализация метода рекурсивного спуска для синтаксического анализа.
 
 
-## Примеры допустимых строк
+## Грамматика
 ```
-Dictionary<int, string> My_dict1 = new Dictionary<int, string>();
-Dictionary<int, string> _Dict = new Dictionary<int, string>();
+G[Program]:
+1. Program -> ε | Instr Program
+2. Instr -> '+' | '-' | '>' | '<' | ',' | '.' | '[' Program ']'
 ```
-## Разработанная грамматика
-```
-1. <DEF> -> ‘Dictionary’ <DICTIONARY>
-2. <DICTIONARY> -> ‘<’ <TYPEKEY>
-3. <TYPEKEY> -> (int|string) <COMMA>
-4. <COMMA> -> ‘,’ <TYPEVALUE>
-5. <TYPEVALUE> -> (int|string) <CLOSE>
-6. <CLOSE> -> ‘>‘ <ID>
-7. <ID> -> (letter|’_’) <IDREM>
-8. <IDREM> -> (letter|’_’|digit) <IDREM>
-9. <IDREM> -> = <ASSIGNTMENT>
-10. <ASSIGNTMENT> -> new <NEW>
-11. <NEW> -> Dictionary <DICTIONARY2>
-12. <DICTIONARY2> -> ‘<’ <TYPEKEY2>
-13. <TYPEKEY2> -> (int|string) <COMMA2>
-14. <COMMA> -> ‘,’ <TYPEVALUE2>
-15. <TYPEVALUE2> -> (int|string) <CLOSE2>
-16. <CLOSE2> -> ‘>’ <RBRACKET>
-17. <RBRACKET> -> ‘(’ <LBRACKET>
-18. <LBRACKET> -> ‘)’ <END>
-19. <END> ; ->
-
-```
-## Граф конечного автомата
-![alt text](Graph.png)
+Грамматика является Контекстно свободной
 
 ## Тестовые примеры
-![alt text](image.png)
-![alt text](image-3.png)
-![alt text](image-4.png)
+![alt text](ex1.png)
+![alt text](ex2.png)
+![alt text](ex3.png)
