@@ -8,27 +8,17 @@ namespace GUICompiler
 {
     enum TokenType
     {
-        TOKEN_INT = 1,
-        TOKEN_STRING,
-        TOKEN_DICTIONARY,
-        TOKEN_NEW,
-        TOKEN_IDENTIFIER,
+        TOKEN_INSTR,
         TOKEN_WHITESPACE,
         TOKEN_WHITESPACE_R,
         TOKEN_WHITESPACE_N,
-        TOKEN_EQUALS,
-        TOKEN_SEMICOLON,
-        TOKEN_LEFT_ANGLE_BRACKET,
-        TOKEN_RIGHT_ANGLE_BRACKET,
-        TOKEN_LEFT_PARANTHESES,
-        TOKEN_RIGHT_PARANTHESES,
-        TOKEN_COMMA,
         TOKEN_ERROR,
     };
 
     internal class Token
     {
         string name;
+        char lexeme;
         TokenType type;
         public Token(string name, TokenType type)
         {
@@ -37,6 +27,7 @@ namespace GUICompiler
         }
 
         public string Name { get { return name; } set { name = value; } }
+        public char Lexeme { get { return lexeme; }  set { lexeme = value; } }  
         public TokenType Type { get { return type; } set { type = value; } }
     }
 }
