@@ -10,11 +10,10 @@ G[Program]:
 Грамматика является Контекстно свободной
 
 ## Язык
-
-L(G) = prog<sup>+</sup>
 ```
+L(G) = prog
 instr = '+'|'-'|'>'|'<'|','|'.'|('['prog']')
-prog = e|instr
+prog = e|(instr prog)
 ```
 
 
